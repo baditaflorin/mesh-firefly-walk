@@ -1,6 +1,9 @@
 export const appConfig = {
   appName: "mesh-firefly-walk",
   storagePrefix: "mesh-firefly-walk",
+  description:
+    "Peer-to-peer browser mesh. Phones pulse soft yellow in clock-synced unison. From a distance, a walking group looks like a swarm of fireflies.",
+  accentHex: "#FFD24A",
   version: __APP_VERSION__,
   commit: __GIT_COMMIT__,
   repositoryUrl: "https://github.com/baditaflorin/mesh-firefly-walk",
