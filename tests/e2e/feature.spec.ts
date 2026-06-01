@@ -101,3 +101,35 @@ test("two peers see each other and pulse in clock-synced unison", async ({ brows
     await cleanup();
   }
 });
+
+/**
+ * Cross-peer assertion for the solo / connected UI state. A lone phone shows a
+ * "pulsing solo — open this room on another phone" hint; the moment a second
+ * peer's clock awareness arrives the hint must disappear. This proves the
+ * presence count is driven by the mesh (awareness), not a local fixture: peer A
+ * starts alone (hint visible) and the hint clears ONLY because B joined the
+ * room and B's awareness crossed into A's replica.
+ */
+test("solo hint shows when alone and clears once a second phone joins", async ({
+  browser,
+  baseURL,
+}) => {
+  const { a, b, cleanup } = await openTwoPeers(browser, baseURL ?? "", { storagePrefix });
+  try {
+    // Arm peer A first and leave B on the splash, so A is genuinely alone.
+    await beginPulsing(a);
+    await expect(a.locator(".firefly-solo")).toBeVisible();
+    await expect(a.locator(".firefly-hud")).toContainText(/\b1 phone\b/);
+
+    // Now bring the second phone into the room.
+    await beginPulsing(b);
+
+    // Once B's awareness crosses the mesh, A is no longer solo: the hint clears
+    // and the count rises to 2. (Web-first assertions auto-poll up to the
+    // awareness ping interval.)
+    await expect(a.locator(".firefly-solo")).toBeHidden({ timeout: 15_000 });
+    await expect(a.locator(".firefly-hud")).toContainText(/2 phones/, { timeout: 15_000 });
+  } finally {
+    await cleanup();
+  }
+});

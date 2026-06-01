@@ -98,13 +98,21 @@ export function Firefly({ roomId, periodMs, hue, audio }: Props) {
     );
   }
 
+  const phoneCount = peers + 1;
   return (
     <div className="firefly-stage" style={{ background: glow }}>
       <div className="firefly-hud">
-        <span>{peers + 1} phones</span>
+        <span>
+          {phoneCount} phone{phoneCount === 1 ? "" : "s"}
+        </span>
         <span>·</span>
         <span>{Math.round(intensity * 100)}%</span>
       </div>
+      {peers === 0 && (
+        <p className="firefly-solo">
+          Pulsing solo — open this room on another phone to sync the swarm.
+        </p>
+      )}
     </div>
   );
 }
