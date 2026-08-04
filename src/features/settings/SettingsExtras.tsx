@@ -25,7 +25,9 @@ export function SettingsExtras({
           max={10000}
           step={100}
           value={periodMs}
-          onChange={(e) => onPeriodChange(Math.max(500, Number(e.target.value) || 2000))}
+          onChange={(e) =>
+            onPeriodChange(Math.min(10000, Math.max(500, Number(e.target.value) || 2000)))
+          }
         />
       </label>
 

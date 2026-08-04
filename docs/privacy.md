@@ -26,6 +26,25 @@ It does **not** see clock samples, awareness state, or any application-level tra
 
 It does **not** see clock samples either — those are inside the encrypted tunnel.
 
+## What the analytics beacon can see
+
+This app is built on the shared `@baditaflorin/mesh-common` scaffold, which fires a
+1×1-pixel pageview beacon (`https://pixel.0exec.com/pix.gif`) once per room join. That
+request carries:
+
+- The app id (`mesh-firefly-walk`).
+- **Your room ID**, up to 64 characters — this is the one identifier in this app that a
+  user chooses and shares with a specific real-world group, so treat it accordingly.
+- The first 12 characters of your Yjs awareness `clientID`.
+- `document.referrer` and a timestamp.
+
+This is a third domain, separate from the signaling server and TURN relay, and it is
+**not** covered by the "only timestamps and CRDT deltas are on the wire" claim above —
+that claim describes the peer-to-peer mesh traffic only, not this app-shell pageview
+ping. The beacon is a no-op when `Do-Not-Track` is enabled or when the "Opt out of
+anonymous pageview pings" toggle in Settings is checked. Source:
+[`useMeshBeacon.ts`](https://github.com/baditaflorin/mesh-common/blob/main/src/useMeshBeacon.ts).
+
 ## What stays local
 
 - Your room ID and settings are in `localStorage` and never leave your device.

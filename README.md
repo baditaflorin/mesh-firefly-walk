@@ -22,11 +22,13 @@ Synchrony settles to roughly **10–30 ms** across the mesh once two ping rounds
 
 ## What's on the wire
 
-Only `{ t: 1715... }` timestamps and Yjs CRDT deltas. No location, no audio, no identity, no anything else. If you can't see the other phones, your phones aren't talking.
+Peer-to-peer, only `{ t: 1715... }` timestamps and Yjs CRDT deltas. No location, no audio, no peer-to-peer identity. If you can't see the other phones, your phones aren't talking.
+
+Separately, the shared app shell fires a one-time, opt-out-able pageview beacon (room ID + a peer-id fragment) to an analytics pixel on app load — see [docs/privacy.md](docs/privacy.md#what-the-analytics-beacon-can-see) for exactly what it sends and how to disable it.
 
 ## Privacy threat model
 
-See [docs/privacy.md](docs/privacy.md). The short version: any peer in the same room can see your phone's wall-clock time. That's all there is to leak. The signaling server and TURN relay carry only encrypted WebRTC traffic and cannot read your timestamps.
+See [docs/privacy.md](docs/privacy.md). The short version: any peer in the same room can see your phone's wall-clock time; the signaling server and TURN relay carry only encrypted WebRTC traffic and cannot read your timestamps; and a separate analytics beacon (opt-out-able) sees your room ID on join. Full breakdown in the linked doc.
 
 ## Architecture
 
